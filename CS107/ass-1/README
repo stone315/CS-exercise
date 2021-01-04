@@ -3,8 +3,8 @@ HW detail is in the pdf file
 
 run the program using command
 
-'''
+```
 make
 ./rsg data/"file.name"
-'''
+```
 
