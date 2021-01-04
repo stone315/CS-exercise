@@ -36,6 +36,7 @@ static void readGrammar(ifstream& infile, map<string, Definition>& grammar)
     infile.putback('{');
     Definition def(infile);
     grammar[def.getNonterminal()] = def;
+
   }
 }
 
@@ -55,6 +56,28 @@ static void readGrammar(ifstream& infile, map<string, Definition>& grammar)
  *             token is represented as a '\0'-terminated C string.
  */
 
+
+static const string searchKeyword(map<string, Definition>& grammar, string keyword)
+{
+  string ans = "";
+  Definition& search = grammar[keyword];
+  const Production& prod = search.getRandomProduction();
+
+  for (vector<string>::const_iterator it = prod.begin(); it < prod.end(); it++)
+  {
+    if (grammar.count(*it))
+      ans += searchKeyword(grammar, *it);
+    else
+      ans += (*it + " ");
+  }
+
+  return ans;
+
+}
+
+
+
+
 int main(int argc, char *argv[])
 {
   if (argc == 1) {
@@ -72,9 +95,9 @@ int main(int argc, char *argv[])
   // things are looking good...
   map<string, Definition> grammar;
   readGrammar(grammarFile, grammar);
-  cout << "The grammar file called \"" << argv[1] << "\" contains "
-       << grammar.size() << " definitions." << endl;
-  
+  //cout << "The grammar file called \"" << argv[1] << "\" contains "
+  //     << grammar.size() << " definitions." << endl;
+  cout << searchKeyword(grammar, "<start>");
 
   return 0;
 }
